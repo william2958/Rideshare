@@ -1,0 +1,10 @@
+li > a {
+	display: inline;
+}
+
+.mat-input-container {
+	display: block;
+}
+.mat-input-underline {
+	position: relative;
+}

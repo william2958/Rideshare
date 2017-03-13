@@ -1,0 +1,43 @@
+<button (click)="showLoginMo()">Show Login Modal</button>
+AuthToken: {{auth_token}}
+
+<h2 (click)="showListings()">Listings</h2>
+<h2 (click)="showRequests()">Requests</h2>
+
+<div *ngIf="!requests">
+	<h5>Active Listings</h5>
+	<div class="row" *ngFor="let trip of user.trips_driving">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['listing', trip.id]"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+	<h5>Past Listings</h5>
+	<div class="row" *ngFor="let trip of user.past_trips_driven">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['listing', trip.id]"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+</div>
+
+<div *ngIf="requests">
+	<h5>Active Requests</h5>
+	<div class="row" *ngFor="let trip of user.trips_requested">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['request', trip.id]"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+	<h5>Past Requests</h5>
+	<div class="row" *ngFor="let trip of user.past_trips_requested">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['request', trip.id]"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+</div>

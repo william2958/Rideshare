@@ -1,0 +1,75 @@
+<div class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" [routerLink]="['/']" >Rideshare</a>
+    </div>
+
+    <div class="collapse navbar-collapse">
+      <div class="navbar-header navbar-right">
+        <ul class="nav navbar-nav">
+          <li *ngIf="currentUser">
+            <a modal-trigger="signUpModal">SignUp</a>
+            <a modal-trigger="loginModal">Login</a>
+          </li>
+          <li *ngIf="currentUser">
+            <a [routerLink]="['dashboard']">MyRides</a>
+            <a [routerLink]="['trip', 'createtrip']">Create Trip</a>
+            <!-- <a [routerLink]="['user/profile']">{{currentUser.first_name}}</a> -->
+            <a >William Huang</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<simple-modal closeOnBodyClick='false' elementId="signUpModal" title="Sign Up">
+  <div class="col-md-4">
+    <form #loginForm="ngForm" (ngSubmit)="login(loginForm.value)" novalidate>
+      <div class="form-group">
+        <label for="userName">User Name:</label>
+        <em *ngIf="loginForm.controls.userName?.invalid && (loginForm.controls.userName?.touched || mouseoverLogin)">Required</em>
+        <md-input-container>        
+          <input mdInput (ngModel)="userName" name="userName" id="userName" type="text" placeholder="email" required/>
+        </md-input-container>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <em *ngIf="loginForm.controls.password?.invalid && (loginForm.controls.password?.touched || mouseoverLogin)">Required</em>
+        <input (ngModel)="password" name="password" id="password" type="password" class="form-control" placeholder="Password..." required/>
+      </div>
+
+      <span (mouseenter)="mouseoverLogin=true" (mouseleave)="mouseoverLogin=false">
+        <button [disabled]="loginForm.invalid" type="submit" class="btn btn-primary">Login</button>
+      </span>
+    </form>
+    <br>
+    <div *ngIf="loginInvalid" class="alert alert-danger">Invalid Login Info</div>
+  </div>
+</simple-modal>
+
+<simple-modal closeOnBodyClick='false' elementId="loginModal" #loginModal title="Log In">
+  <div class="col-md-4">
+    <form #loginForm="ngForm" (ngSubmit)="login(loginForm.value)" novalidate>
+      <div class="form-group">
+        <label for="userName">User Name:</label>
+        <em *ngIf="loginForm.controls.userName?.invalid && (loginForm.controls.userName?.touched || mouseoverLogin)">Required</em>
+        <md-input-container>        
+          <input mdInput (ngModel)="userName" name="userName" id="userName" type="text" placeholder="email" required/>
+        </md-input-container>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <em *ngIf="loginForm.controls.password?.invalid && (loginForm.controls.password?.touched || mouseoverLogin)">Required</em>
+        <input (ngModel)="password" name="password" id="password" type="password" class="form-control" placeholder="Password..." required/>
+      </div>
+
+      <span (mouseenter)="mouseoverLogin=true" (mouseleave)="mouseoverLogin=false">
+        <button [disabled]="loginForm.invalid" type="submit" class="btn btn-primary">Login</button>
+      </span>
+    </form>
+    <br>
+    <div *ngIf="loginInvalid" class="alert alert-danger">Invalid Login Info</div>
+  </div>
+  <button (click)="cancel()">cancel</button>
+</simple-modal>

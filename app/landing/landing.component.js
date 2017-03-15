@@ -15,16 +15,24 @@ var LandingComponent = (function () {
     function LandingComponent(authService, router) {
         this.authService = authService;
         this.router = router;
+        this.mouseoverForm = false;
     }
     LandingComponent.prototype.ngOnInit = function () {
     };
     LandingComponent.prototype.search = function (formValues) {
-        console.log(formValues.fromLocation);
-        console.log(formValues.toLocation);
-        this.router.navigate(['trip', 'searchtrips', formValues.fromLocation, formValues.toLocation, formValues.date]);
+        var date = new Date(formValues.date);
+        this.router.navigate(['trip', 'searchtrips', formValues.fromLocation.toLocaleLowerCase(), formValues.toLocation.toLocaleLowerCase(), date.getTime()]);
     };
     LandingComponent.prototype.cancel = function () {
         // console.log(this.containerEl)
+    };
+    LandingComponent.prototype.checkError = function (formValues) {
+        if (formValues.invalid) {
+            this.mouseoverForm = true;
+        }
+        else {
+            this.search(formValues.value);
+        }
     };
     LandingComponent = __decorate([
         core_1.Component({

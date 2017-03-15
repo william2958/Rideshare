@@ -4,9 +4,28 @@ AuthToken: {{auth_token}}
 <h2 (click)="showListings()">Listings</h2>
 <h2 (click)="showRequests()">Requests</h2>
 
+<div *ngIf="requests">
+	<h5>Active Requests</h5>
+	<div class="row" *ngFor="let trip of trips_requested">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail (cancelRequest)="cancelRequest($event)" [trip]="trip" [request]="true" [listing]="false"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+	<h5>Past Requests</h5>
+	<div class="row" *ngFor="let trip of user.past_trips_requested">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<my-trip-thumbnail [trip]="trip" [request]="true" [listing]="false" [routerLink]="['request', trip.id]"></my-trip-thumbnail>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+</div>
+
 <div *ngIf="!requests">
 	<h5>Active Listings</h5>
-	<div class="row" *ngFor="let trip of user.trips_driving">
+	<div class="row" *ngFor="let trip of trips_listed">
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['listing', trip.id]"></my-trip-thumbnail>
@@ -17,27 +36,12 @@ AuthToken: {{auth_token}}
 	<div class="row" *ngFor="let trip of user.past_trips_driven">
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
-			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['listing', trip.id]"></my-trip-thumbnail>
+			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false"></my-trip-thumbnail>
 		</div>
 		<div class="col-md-3"></div>
 	</div>
 </div>
 
-<div *ngIf="requests">
-	<h5>Active Requests</h5>
-	<div class="row" *ngFor="let trip of user.trips_requested">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['request', trip.id]"></my-trip-thumbnail>
-		</div>
-		<div class="col-md-3"></div>
-	</div>
-	<h5>Past Requests</h5>
-	<div class="row" *ngFor="let trip of user.past_trips_requested">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<my-trip-thumbnail [trip]="trip" [request]="false" [listing]="false" [routerLink]="['request', trip.id]"></my-trip-thumbnail>
-		</div>
-		<div class="col-md-3"></div>
-	</div>
-</div>
+
+
+<button (click)="login()">Login</button>

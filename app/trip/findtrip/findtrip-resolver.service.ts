@@ -9,8 +9,18 @@ export class FindTripResolver implements Resolve<any> {
 
 	}
 
-	resolve(route: ActivatedRouteSnapshot) {
-		return this.tripService.searchTrips(route.params['from'], route.params['to'], route.params['date'])
+	// put :any because there are two different return types
+	resolve(route: ActivatedRouteSnapshot) : any {
+		if (this.tripService.cached != route.params['from']+route.params['to']+route.params['date']) {
+			// Get New data
+			console.log("Getting fresh data");
+			return this.tripService.searchTrips(route.params['from'], route.params['to'], route.params['date'])
+		} else {
+			// Fetching Cached Data
+			console.log("Fetching Cached Data");
+			return this.tripService.getFoundTrips();
+		}
+		
 	}
 
 }

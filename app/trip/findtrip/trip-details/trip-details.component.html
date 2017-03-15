@@ -2,9 +2,19 @@
 
 <button (click)="back()">Back</button>
 
+<div *ngIf="errorMessage">{{errorMessage}}</div>
+
 <div>
-	{{trip.id}}
+	Trip Id: {{trip.id}}
+	Trip From Location: {{trip.from_city}}
+	Trip To Location: {{trip.to_city}}
+	Trip Time: {{trip.date}}
+	Trip Price: {{trip.price}}
 </div>
 
-<button (click)="listTrip()">Show Trip</button>
-<button (click)="requestRide()">Request Ride</button>
+<button (click)="confirmRequest()">Request Ride</button>
+
+<simple-modal #confirmModal closeOnBodyClick='false' elementId="confirmModal" title="Confirm this Request?">
+	You have: ({{requestsRemaining}}) Requests remaining
+  <button (click)="requestRide()">Confirm</button>
+</simple-modal>

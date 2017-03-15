@@ -1,1 +1,15 @@
-<h6>{{trip.id}}</h6>
+<div>
+	<div (click)="showDetails()">
+		<h5>Trip Id: {{trip.id}}</h5>
+		<h5>Trip From Location: {{trip.from_city}}</h5>
+		<h5>Trip To Location: {{trip.to_city}}</h5>
+		<h5>Trip Time: {{trip.date}}</h5>
+		<h5>Trip Price: {{trip.price}}</h5>
+	</div>
+	<div *ngIf="request">
+		<button style="color: red;" (click)="cancel()">CANCEL REQUEST</button>
+	</div>
+	<div *ngIf="!request">
+		<h3>REQUEST: ({{trip.user_requests?.length}})</h3>
+	</div>
+</div>

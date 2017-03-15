@@ -1,8 +1,7 @@
 <h1>Trip List View</h1>
 
 <div *ngFor="let trip of trips">
-	<trip-thumbnail [trip]="trip"></trip-thumbnail>
+	<trip-thumbnail [trip]="trip" [routerLink]="[trip.id]"></trip-thumbnail>
 </div>
 
 <button (click)="listTrips()">List Trips</button>
-<button (click)="tripDemo()">Show A Trip detail</button>

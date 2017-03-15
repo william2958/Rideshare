@@ -18,19 +18,17 @@ var FindTripComponent = (function () {
         this.router = router;
     }
     FindTripComponent.prototype.ngOnInit = function () {
-        if (!this.tripService.getFoundTrips()) {
-            this.trips = this.route.snapshot.data['trips'];
-            this.tripService.setFoundTrips(this.trips);
+        var parameters = this.route.params;
+        if (this.tripService.cached != parameters.value['from'] + parameters.value['to'] + parameters.value['date'].toString()) {
+            this.trips = JSON.parse(this.route.snapshot.data['trips']._body).results;
         }
         else {
             this.trips = this.tripService.getFoundTrips();
         }
+        console.log("returned trips are: ", this.trips);
     };
     FindTripComponent.prototype.listTrips = function () {
         console.log(this.tripService.getFoundTrips());
-    };
-    FindTripComponent.prototype.tripDemo = function () {
-        this.router.navigate(['trip', 'searchtrips', 'from', 'to', 'time', "blah"]);
     };
     FindTripComponent = __decorate([
         core_1.Component({

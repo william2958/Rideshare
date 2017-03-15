@@ -30,13 +30,6 @@
 	      <input mdInput [(ngModel)]="fromCountry" name="fromCountry" id="fromCountry" type="text" placeholder="Country" required/>
 	    </md-input-container>
 	  </div>
-
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.pickupLocation?.invalid && (createTripForm.controls.pickupLocation?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="pickupLocation" name="pickupLocation" id="pickupLocation" type="text" placeholder="Pick-Up Location"/>
-	    </md-input-container>
-	  </div>
   </div>
 
   <div ngModelGroup="toLocation" #locationGroup="ngModelGroup">
@@ -67,13 +60,6 @@
 	      <input mdInput [(ngModel)]="toCountry" name="toCountry" id="toCountry" type="text" placeholder="Country" required/>
 	    </md-input-container>
 	  </div>
-
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.DropoffLocation?.invalid && (createTripForm.controls.DropoffLocation?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="DropoffLocation" name="DropoffLocation" id="DropoffLocation" type="text" placeholder="Drop-Off Location"/>
-	    </md-input-container>
-	  </div>
   </div>
 
   <div class="form-group">
@@ -86,14 +72,21 @@
   <div class="form-group">
     <em *ngIf="createTripForm.controls.date?.invalid && (createTripForm.controls.date?.touched || mouseoverForm)">Required</em>
     <md-input-container>
-      <input mdInput [(ngModel)]="date" name="date" id="date" type="text" placeholder="Pick-Up Location" required/>
+      <input mdInput [(ngModel)]="date" name="date" id="date" type="datetime-local" placeholder="Pick-Up Location" required/>
     </md-input-container>
   </div>
 
   <div class="form-group">
     <em *ngIf="createTripForm.controls.price?.invalid && (createTripForm.controls.price?.touched || mouseoverForm)">Required</em>
     <md-input-container>
-      <input mdInput [(ngModel)]="price" name="price" id="price" type="text" placeholder="Pick-Up Location" required/>
+      <input mdInput [(ngModel)]="price" name="price" id="price" type="text" placeholder="Price" required/>
+    </md-input-container>
+  </div>
+
+  <div class="form-group">
+    <em *ngIf="createTripForm.controls.tripDetails?.invalid && (createTripForm.controls.tripDetails?.touched || mouseoverForm)">Required</em>
+    <md-input-container>
+      <input mdInput [(ngModel)]="tripDetails" name="tripDetails" id="tripDetails" type="text" placeholder="Trip Details"/>
     </md-input-container>
   </div>
 

@@ -14,8 +14,18 @@ var FindTripResolver = (function () {
     function FindTripResolver(tripService) {
         this.tripService = tripService;
     }
+    // put :any because there are two different return types
     FindTripResolver.prototype.resolve = function (route) {
-        return this.tripService.searchTrips(route.params['from'], route.params['to'], route.params['date']);
+        if (this.tripService.cached != route.params['from'] + route.params['to'] + route.params['date']) {
+            // Get New data
+            console.log("Getting fresh data");
+            return this.tripService.searchTrips(route.params['from'], route.params['to'], route.params['date']);
+        }
+        else {
+            // Fetching Cached Data
+            console.log("Fetching Cached Data");
+            return this.tripService.getFoundTrips();
+        }
     };
     FindTripResolver = __decorate([
         core_1.Injectable(), 

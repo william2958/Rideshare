@@ -9,6 +9,7 @@ import { MyTripThumbnailComponent } from './trip-details/my-trip-thumbnail.compo
 import { RequestDetailsComponent } from './trip-details/request-details.component';
 import { ListingDetailsComponent } from './trip-details/listing-details.component';
 import { TripDetailResolver } from '../trip/index';
+import { ListingDetailResolver } from './trip-details/listing-details-resolver.service';
 
 import { CommonRideshareModule } from '../common/common.module';
 import { JQ_TOKEN } from '../common/jQuery.service';
@@ -31,6 +32,7 @@ declare let jQuery : Object;
 	],
 	providers: [
 		TripDetailResolver,
+		ListingDetailResolver,
 		{ provide: JQ_TOKEN, useValue: jQuery},
 		{ provide: APP_CONFIG, useValue: AppConfig}
 	]

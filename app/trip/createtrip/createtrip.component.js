@@ -16,12 +16,14 @@ var index_1 = require('../index');
 var auth_service_1 = require('../../user/auth.service');
 var router_1 = require('@angular/router');
 var jQuery_service_1 = require('../../common/jQuery.service');
+var toastr_service_1 = require('../../common/toastr.service');
 var CreateTripComponent = (function () {
-    function CreateTripComponent(tripService, router, authService, $) {
+    function CreateTripComponent(tripService, router, authService, $, toastr) {
         this.tripService = tripService;
         this.router = router;
         this.authService = authService;
         this.$ = $;
+        this.toastr = toastr;
         this.fromMetadata = "Western University";
         this.fromCity = "London";
         this.fromState = "Ontario";
@@ -31,16 +33,31 @@ var CreateTripComponent = (function () {
         this.toState = "Ontario";
         this.toCountry = "Canada";
         this.numPassengers = "4";
-        this.date = "April 4";
+        this.date = '2017-03-15T12:03';
         this.price = "20";
+        this.tripDetails = "Details";
     }
     CreateTripComponent.prototype.confirm = function (formValues) {
+        formValues.date = new Date(formValues.date).getTime();
         this.$(this.containerEl.containerEl.nativeElement).modal('show');
-        // console.log(this.containerEl)
-        console.log(formValues, this.authService.currentUser);
     };
     CreateTripComponent.prototype.create = function (formValues) {
-        console.log(formValues);
+        var _this = this;
+        this.tripService.createTrip(formValues)
+            .subscribe(function (data) {
+            if (data) {
+                _this.$(_this.containerEl.containerEl.nativeElement).modal('hide');
+                _this.toastr.success("Event Created!");
+                _this.tripService.dashboardShowRequests = false;
+                _this.authService.cached_user_trips = false;
+                _this.router.navigate(['/', 'dashboard']);
+                console.log("Subscribed create function returns: ", data);
+            }
+        }, function (err) {
+            _this.$(_this.containerEl.containerEl.nativeElement).modal('hide');
+            _this.toastr.error(err);
+        });
+        console.log("form Values: ", formValues);
     };
     CreateTripComponent.prototype.cancel = function () {
         this.router.navigate(['/']);
@@ -53,8 +70,9 @@ var CreateTripComponent = (function () {
         core_1.Component({
             templateUrl: 'app/trip/createtrip/createtrip.component.html'
         }),
-        __param(3, core_1.Inject(jQuery_service_1.JQ_TOKEN)), 
-        __metadata('design:paramtypes', [index_1.TripService, router_1.Router, auth_service_1.AuthService, Object])
+        __param(3, core_1.Inject(jQuery_service_1.JQ_TOKEN)),
+        __param(4, core_1.Inject(toastr_service_1.TOASTR_TOKEN)), 
+        __metadata('design:paramtypes', [index_1.TripService, router_1.Router, auth_service_1.AuthService, Object, Object])
     ], CreateTripComponent);
     return CreateTripComponent;
 }());

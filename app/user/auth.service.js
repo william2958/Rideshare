@@ -16,35 +16,90 @@ var http_1 = require('@angular/http');
 var Rx_1 = require('rxjs/Rx');
 var app_config_1 = require('../app.config');
 var core_2 = require('angular2-cookie/core');
+var navbar_service_1 = require('../nav/navbar.service');
+var toastr_service_1 = require('../common/toastr.service');
 var AuthService = (function () {
-    function AuthService(config, http, cookieService) {
+    function AuthService(config, http, cookieService, navBarService, toastr) {
         this.config = config;
         this.http = http;
         this.cookieService = cookieService;
-        this.currentUser = temp_user;
+        this.navBarService = navBarService;
+        this.toastr = toastr;
+        this.cached_user_trips = false;
     }
     AuthService.prototype.loginUser = function (email, password) {
         var _this = this;
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
-        var loginInfo = { email: email, password: password };
-        return this.http.post(this.config.apiEndpoint + '/sign_in', JSON.stringify(loginInfo), options)
+        console.log("Attempting to log in");
+        return this.http.post(this.config.apiEndpoint + "/sign_in?email=" + email + "&password=" + password, options)
             .do(function (resp) {
             if (resp) {
-                _this.currentUser = resp.json();
+                console.log("Logged in as: ", resp);
+                _this.currentUser = JSON.parse(resp._body);
+                console.log("Current user is: ", _this.currentUser);
                 _this.cookieService.put("auth_token", _this.currentUser.auth_token);
+                _this.toastr.success("Logged In");
             }
-        }).catch(function (error) {
-            return Rx_1.Observable.of(false);
-        });
+        }).catch(this.handleError);
+    };
+    AuthService.prototype.loginWithToken = function (token) {
+        var _this = this;
+        var headers = new http_1.Headers();
+        headers.append('Authorization', token);
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.get(this.config.apiEndpoint + "/user", { headers: headers })
+            .do(function (resp) {
+            _this.currentUser = JSON.parse(resp._body);
+            _this.currentUser.auth_token = token;
+            _this.navBarService.update();
+        }).catch(this.handleError);
+    };
+    AuthService.prototype.logout = function () {
+        this.currentUser = null;
+        this.cookieService.removeAll();
+    };
+    AuthService.prototype.getTrips = function () {
+        var _this = this;
+        var headers = new http_1.Headers();
+        headers.append('Authorization', this.currentUser.auth_token);
+        var options = new http_1.RequestOptions({ headers: headers });
+        if (!this.cached_user_trips) {
+            if (this.currentUser.auth_token) {
+                return this.http.post(this.config.apiEndpoint + "/get_user_trips", options, { headers: headers })
+                    .do(function (resp) {
+                    _this.cached_user_trips = true;
+                    _this.cached_user_trips_response = JSON.parse(resp._body);
+                    console.log("Response from server is: ", resp);
+                }).catch(this.handleError);
+            }
+        }
+        else {
+            return this.cached_user_trips_response;
+        }
     };
     AuthService.prototype.getUser = function () {
-        return temp_user;
+        return this.currentUser;
+    };
+    AuthService.prototype.handleError = function (error) {
+        // In a real world app, you might use a remote logging infrastructure
+        var errMsg;
+        if (error instanceof http_1.Response) {
+            var body = error.json() || '';
+            var err = body.error || JSON.stringify(body);
+            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Rx_1.Observable.throw(errMsg);
     };
     AuthService = __decorate([
         core_1.Injectable(),
-        __param(0, core_1.Inject(app_config_1.APP_CONFIG)), 
-        __metadata('design:paramtypes', [Object, http_1.Http, core_2.CookieService])
+        __param(0, core_1.Inject(app_config_1.APP_CONFIG)),
+        __param(4, core_1.Inject(toastr_service_1.TOASTR_TOKEN)), 
+        __metadata('design:paramtypes', [Object, http_1.Http, core_2.CookieService, navbar_service_1.NavBarService, Object])
     ], AuthService);
     return AuthService;
 }());

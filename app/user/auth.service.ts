@@ -5,36 +5,95 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { APP_CONFIG, IAppConfig } from '../app.config';
 import { CookieService } from 'angular2-cookie/core';
+import { NavBarService } from '../nav/navbar.service';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 
 @Injectable()
 export class AuthService {
 
-	currentUser: any = temp_user;
+	currentUser: any;
+	cached_user_trips: boolean = false;
+	cached_user_trips_response;
 
 	constructor(
 		@Inject(APP_CONFIG) private config: IAppConfig, 
 		private http:Http,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		private navBarService: NavBarService,
+		@Inject(TOASTR_TOKEN) private toastr: Toastr
 	) {}
 
-	loginUser(email: string, password: string) {
+	loginUser(email: string, password: string):Observable<any> {
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({headers: headers});
-		let loginInfo = {email: email, password: password};
 
-		return this.http.post(this.config.apiEndpoint + '/sign_in', JSON.stringify(loginInfo), options)
-		.do((resp: any) => {
-			if (resp) {
-				this.currentUser = <IUser>resp.json();
-				this.cookieService.put("auth_token", this.currentUser.auth_token);
+		console.log("Attempting to log in");
+		return this.http.post(`${this.config.apiEndpoint}/sign_in?email=${email}&password=${password}`, options)
+			.do((resp: any) => {
+				if (resp) {
+					console.log("Logged in as: ", resp)
+					this.currentUser = JSON.parse(resp._body);
+					console.log("Current user is: ", this.currentUser)
+					this.cookieService.put("auth_token", this.currentUser.auth_token);
+					this.toastr.success("Logged In");
+				}
+			}).catch(this.handleError)
+	}
+
+	loginWithToken(token: string):Observable<any> {
+		var headers = new Headers();
+		headers.append('Authorization', token);
+		let options = new RequestOptions({headers: headers})
+		
+		return this.http.get(`${this.config.apiEndpoint}/user`, {headers: headers})
+			.do((resp: any) => {
+				this.currentUser = JSON.parse(resp._body);
+				this.currentUser.auth_token = token;
+				this.navBarService.update();
+			}).catch(this.handleError);
+		
+	}
+
+	logout() {
+		this.currentUser = null;
+		this.cookieService.removeAll();
+	}
+
+	getTrips():Observable<any> {
+		var headers = new Headers();
+		headers.append('Authorization', this.currentUser.auth_token)
+		let options = new RequestOptions({headers: headers})
+		
+		if (!this.cached_user_trips) {
+			if (this.currentUser.auth_token) {
+				return this.http.post(`${this.config.apiEndpoint}/get_user_trips`, options, {headers: headers})
+					.do((resp: any) => {
+						this.cached_user_trips = true;
+						this.cached_user_trips_response = JSON.parse(resp._body);
+						console.log("Response from server is: ", resp);
+					}).catch(this.handleError);
 			}
-		}).catch(error => {
-			return Observable.of(false);
-		})
+		} else {
+			return this.cached_user_trips_response;
+		}
 	}
 
 	getUser() {
-		return temp_user;
+		return this.currentUser;
+	}
+
+	private handleError (error: Response | any) {
+	  // In a real world app, you might use a remote logging infrastructure
+	  let errMsg: string;
+	  if (error instanceof Response) {
+	    const body = error.json() || '';
+	    const err = body.error || JSON.stringify(body);
+	    errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+	  } else {
+	    errMsg = error.message ? error.message : error.toString();
+	  }
+	  console.error(errMsg);
+	  return Observable.throw(errMsg);
 	}
 
 }

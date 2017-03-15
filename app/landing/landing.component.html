@@ -1,35 +1,24 @@
-<h1>LANDING</h1>
+<div class="landing_page">
+  <div class="find_a_trip">
+    <h1>Find A Ride</h1>
 
-<h3>Find a ride</h3>
+    <form #searchForm="ngForm" novalidate>
+      <div class="form-group">
+        <em [hidden]="!(searchForm.controls.fromLocation?.invalid && (searchForm.controls.fromLocation?.touched || mouseoverForm))">Required</em>
+        <input (ngModel)="fromLocation" name="fromLocation" id="fromLocation" type="text" placeholder="From: (city)" required/>
+      </div>
 
-<form #searchForm="ngForm" (ngSubmit)="search(searchForm.value)" novalidate>
-  <div class="form-group">
-    <label for="fromLocation">From:</label>
-    <em *ngIf="searchForm.controls.fromLocation?.invalid && (searchForm.controls.fromLocation?.touched || mouseoverForm)">Required</em>
-    <md-input-container>        
-      <input mdInput (ngModel)="fromLocation" name="fromLocation" id="fromLocation" type="text" placeholder="City" required/>
-    </md-input-container>
+      <div class="form-group">
+        <em [hidden]="!(searchForm.controls.toLocation?.invalid && (searchForm.controls.toLocation?.touched || mouseoverForm))">Required</em>
+        <input (ngModel)="toLocation" name="toLocation" id="toLocation" type="text" placeholder="To: (city)" required/>
+      </div>
+
+      <div class="form-group">
+        <em id="date-error" [hidden]="!(searchForm.controls.date?.invalid && (searchForm.controls.date?.touched || mouseoverForm))">Required</em>
+        <input class="date" (ngModel)="date" name="date" id="date" type="date" placeholder="Date" required/>
+      </div>
+
+      <button (click)="checkError(searchForm)" type="submit" class="secondary-brand-button">Search</button>
+    </form>
   </div>
-
-  <div class="form-group">
-    <label for="toLocation">From:</label>
-    <em *ngIf="searchForm.controls.toLocation?.invalid && (searchForm.controls.toLocation?.touched || mouseoverForm)">Required</em>
-    <md-input-container>        
-      <input mdInput (ngModel)="toLocation" name="toLocation" id="toLocation" type="text" placeholder="City" required/>
-    </md-input-container>
-  </div>
-
-  <div class="form-group">
-    <label for="date">Date:</label>
-    <em *ngIf="searchForm.controls.date?.invalid && (searchForm.controls.date?.touched || mouseoverForm)">Required</em>
-    <md-input-container>
-      <input mdInput (ngModel)="date" name="date" id="date" type="text" placeholder="Date" required/>
-    </md-input-container>
-  </div>
-
-  <span (mouseenter)="mouseoverForm=true" (mouseleave)="mouseoverForm=false">
-    <button [disabled]="searchForm.invalid" type="submit" class="btn btn-primary">Search</button>
-  </span>
-  
-  Searchform valid: {{searchForm.valid}}
-</form>
+</div>

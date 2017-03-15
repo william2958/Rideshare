@@ -10,7 +10,11 @@ export class TripDetailResolver implements Resolve<any> {
 	}
 
 	resolve(route: ActivatedRouteSnapshot) {
-		return this.tripService.getTrip(route.params['id']);
+		console.log("Getting a trip detail", route.params['id'])
+		return this.tripService.getTrip(route.params['id'])
+			.do((resp: any) => {
+				console.log("The response from the server is: ", resp)
+			});
 	}
 
 }

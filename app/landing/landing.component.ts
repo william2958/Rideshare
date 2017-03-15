@@ -8,21 +8,32 @@ import { AuthService } from '../user/auth.service';
 })
 
 export class LandingComponent implements OnInit {
+	mouseoverForm: boolean = false;
 
-	constructor (private authService: AuthService, private router: Router) {}
+	constructor (
+		private authService: AuthService, 
+		private router: Router
+	) {}
 
 	ngOnInit() {
 	}
 
 	search(formValues) {
-		console.log(formValues.fromLocation);
-		console.log(formValues.toLocation);
-		this.router.navigate(['trip', 'searchtrips', formValues.fromLocation, formValues.toLocation, formValues.date]);
+		var date = new Date(formValues.date);
+		this.router.navigate(['trip', 'searchtrips', formValues.fromLocation.toLocaleLowerCase(), formValues.toLocation.toLocaleLowerCase(), date.getTime()]);
 	}
 
 	cancel() {
 		// console.log(this.containerEl)
 		
+	}
+
+	checkError(formValues) {
+		if (formValues.invalid) {
+			this.mouseoverForm = true;
+		} else {
+			this.search(formValues.value)
+		}
 	}
 
 }

@@ -14,12 +14,17 @@ var NavBarService = (function () {
     function NavBarService() {
         this.showLoginSubject = new Rx_1.Subject();
         this.showLogin = this.showLoginSubject.asObservable();
+        this.updateNavSubject = new Rx_1.Subject();
+        this.updateNav = this.updateNavSubject.asObservable();
     }
     NavBarService.prototype.showLoginModal = function () {
         this.showLoginSubject.next(true);
     };
     NavBarService.prototype.showSignUpModal = function () {
         this.showSignUp = true;
+    };
+    NavBarService.prototype.update = function () {
+        this.updateNavSubject.next(true);
     };
     NavBarService = __decorate([
         core_1.Injectable(), 

@@ -1,3 +1,10 @@
-<h2>Request Detail Component {{trip.id}}</h2>
+<h2>Request Detail Component</h2>
+
+<h5>Trip Id: {{trip.id}}</h5>
+<h5>Trip From Location: {{trip.from_city}}</h5>
+<h5>Trip To Location: {{trip.to_city}}</h5>
+<h5>Trip Time: {{trip.date}}</h5>
+<h5>Trip Price: {{trip.price}}</h5>
 
 <button [routerLink]="['/', 'dashboard']">Back</button>
+<button (click)="cancelRequest()">Cancel Request</button>

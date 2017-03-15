@@ -18,6 +18,7 @@ var my_trip_thumbnail_component_1 = require('./trip-details/my-trip-thumbnail.co
 var request_details_component_1 = require('./trip-details/request-details.component');
 var listing_details_component_1 = require('./trip-details/listing-details.component');
 var index_1 = require('../trip/index');
+var listing_details_resolver_service_1 = require('./trip-details/listing-details-resolver.service');
 var common_module_1 = require('../common/common.module');
 var jQuery_service_1 = require('../common/jQuery.service');
 var app_config_1 = require('../app.config');
@@ -41,6 +42,7 @@ var DashboardModule = (function () {
             ],
             providers: [
                 index_1.TripDetailResolver,
+                listing_details_resolver_service_1.ListingDetailResolver,
                 { provide: jQuery_service_1.JQ_TOKEN, useValue: jQuery },
                 { provide: app_config_1.APP_CONFIG, useValue: app_config_1.AppConfig }
             ]

@@ -1,3 +1,39 @@
 body {
 	font-family: 'Lato';
 }
+
+* {
+	box-sizing: border-box;
+}
+
+button.brand-button {
+	background-color: #2E7D32;
+	box-shadow: 0px 2px 6px #D5D5D5, 0px 2px 6px #B8B8B8;
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	border-radius: 3px;
+	border: 0;
+	padding: 7px 24px 7px 24px;
+}
+
+button.secondary-brand-button {
+	background-color: #4CAF50;
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	border-radius: 3px;
+	border: 0;
+	padding: 7px 24px 7px 24px;
+}
+
+button.inverse-brand-button {
+	border: 2px solid #2E7D32;
+	box-shadow: 0px 2px 6px #D5D5D5, 0px 2px 6px #B8B8B8;
+	color: #2E7D32;
+	font-size: 14px;
+	font-weight: bold;
+	border-radius: 3px;
+	padding: 7px 24px 7px 24px;
+	background-color: transparent;
+}

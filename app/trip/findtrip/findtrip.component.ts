@@ -8,25 +8,22 @@ import { TripService } from '../index';
 })
 
 export class FindTripComponent implements OnInit {
-	trips: ITrip[];
+	trips: any[];
 
 	constructor (private route: ActivatedRoute, private tripService: TripService, private router: Router) {}
 
 	ngOnInit() {
-		if (!this.tripService.getFoundTrips()) {
-			this.trips = this.route.snapshot.data['trips'];
-			this.tripService.setFoundTrips(this.trips);
+		var parameters = <any>this.route.params
+		if (this.tripService.cached != parameters.value['from']+parameters.value['to']+parameters.value['date'].toString()) {
+			this.trips = JSON.parse(this.route.snapshot.data['trips']._body).results;
 		} else {
 			this.trips = this.tripService.getFoundTrips();
 		}
+		console.log("returned trips are: ", this.trips);
 	}
 
 	listTrips() {
 		console.log(this.tripService.getFoundTrips());
-	}
-
-	tripDemo() {
-		this.router.navigate(['trip', 'searchtrips', 'from', 'to', 'time', "blah" ])
 	}
 
 }

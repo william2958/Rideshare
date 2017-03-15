@@ -18,6 +18,7 @@ var cookies_service_1 = require('angular2-cookie/services/cookies.service');
 var routes_1 = require('./routes');
 var auth_service_1 = require('./user/auth.service');
 var index_1 = require('./trip/index');
+var auth_guard_1 = require('./guards/auth.guard');
 var _404_component_1 = require('./errors/404.component');
 var rideshare_component_1 = require('./rideshare.component');
 var landing_component_1 = require('./landing/landing.component');
@@ -25,6 +26,7 @@ var navbar_component_1 = require('./nav/navbar.component');
 var navbar_service_1 = require('./nav/navbar.service');
 var common_module_1 = require('./common/common.module');
 var jQuery_service_1 = require('./common/jQuery.service');
+var toastr_service_1 = require('./common/toastr.service');
 var app_config_1 = require('./app.config');
 var AppModule = (function () {
     function AppModule() {
@@ -49,10 +51,12 @@ var AppModule = (function () {
             providers: [
                 cookies_service_1.CookieService,
                 auth_service_1.AuthService,
+                auth_guard_1.AuthGuard,
                 index_1.TripService,
                 navbar_service_1.NavBarService,
                 { provide: jQuery_service_1.JQ_TOKEN, useValue: jQuery },
-                { provide: app_config_1.APP_CONFIG, useValue: app_config_1.AppConfig }
+                { provide: app_config_1.APP_CONFIG, useValue: app_config_1.AppConfig },
+                { provide: toastr_service_1.TOASTR_TOKEN, useValue: toastr }
             ],
             bootstrap: [rideshare_component_1.RideshareAppComponent]
         }), 

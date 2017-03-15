@@ -20,13 +20,61 @@ var DashboardComponent = (function () {
         this.tripService = tripService;
         this.cookieService = cookieService;
         // Show requests or listing boolean
-        this.requests = true;
+        this.requests = this.tripService.dashboardShowRequests;
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        // this.authService.loginUser('william2958@gmail.com', 'password');
-        this.user = this.authService.currentUser;
-        console.log(this.authService.currentUser);
+        var _this = this;
+        // If there is cached data, don't send another request to get the trips
+        if (!this.authService.cached_user_trips) {
+            this.user = this.authService.currentUser;
+            this.authService.getTrips().subscribe(function (resp) {
+                var trips = JSON.parse(resp._body);
+                console.log('resp is:', JSON.parse(resp._body));
+                _this.trips_accepted = trips.trip_accepted;
+                _this.trips_requested = trips.trips_requested;
+                _this.trips_listed = trips.trips_listed;
+                console.log("Trips accepted are: ", _this.trips_accepted);
+                console.log("Trips requested are: ", _this.trips_requested);
+                console.log("Trips listed are: ", _this.trips_listed);
+            });
+        }
+        else {
+            console.log("There was cached trips and so no http request was sent");
+            this.user = this.authService.currentUser;
+            var response = this.authService.getTrips();
+            var trips = response;
+            console.log('resp is:', trips);
+            this.trips_accepted = trips.trip_accepted;
+            this.trips_requested = trips.trips_requested;
+            this.trips_listed = trips.trips_listed;
+        }
+        // 	}
+        // });
+        // this.user = this.authService.currentUser;
+        console.log("Trips: ", this.trips_listed);
         this.auth_token = this.cookieService.get("auth_token");
+    };
+    DashboardComponent.prototype.cancelRequest = function (event) {
+        var _this = this;
+        // Call tripService's cancel Request here
+        console.log("Outputted event is: ", event);
+        this.tripService.cancelTripRequest(event.id).subscribe(function (data) {
+            if (data) {
+                var response = JSON.parse(data._body);
+                console.log("response is: ", response);
+                if (response.status == "success") {
+                    console.log("It was a successful delete");
+                    console.log("Index of event is: ", _this.trips_requested.indexOf(event));
+                    _this.trips_requested.splice(_this.trips_requested.indexOf(event), 1);
+                    console.log("After removing request, trip requested array is: ", _this.trips_requested);
+                }
+            }
+        }, function (err) {
+            console.log("There was an error cancelling the trip request and the error is: ", err);
+        });
+    };
+    DashboardComponent.prototype.login = function () {
+        this.authService.loginUser('william2958@gmail.com', 'password').subscribe();
     };
     DashboardComponent.prototype.showLoginMo = function () {
         this.navbarService.showLoginModal();

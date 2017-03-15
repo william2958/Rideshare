@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ITrip } from '../../trip/index';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'my-trip-thumbnail',
@@ -14,5 +15,22 @@ export class MyTripThumbnailComponent {
 	@Input() trip: ITrip;
 	@Input() request: boolean;
 	@Input() listing: boolean;
+	@Output() cancelRequest = new EventEmitter();
+
+	constructor (private router: Router) {
+
+	}
+
+	cancel() {
+		this.cancelRequest.emit(this.trip);
+	}
+
+	showDetails() {
+		if (this.request) {
+			this.router.navigate(['dashboard', 'request', this.trip.id]);
+		} else {
+			this.router.navigate(['dashboard', 'listing', this.trip.id]);
+		}
+	}
 
 }

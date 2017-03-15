@@ -5,12 +5,17 @@ import { Subject, Observable } from 'rxjs/Rx';
 export class NavBarService {
 	showLogin: Observable<boolean>;
 	showSignUp: boolean;
+	updateNav: Observable<boolean>;
 
 	private showLoginSubject: Subject<boolean>;
+	private updateNavSubject: Subject<boolean>;
 
 	constructor() {
 		this.showLoginSubject = new Subject<boolean>();
 		this.showLogin = this.showLoginSubject.asObservable();
+
+		this.updateNavSubject = new Subject<boolean>();
+		this.updateNav = this.updateNavSubject.asObservable();
 	}
 
 	showLoginModal() {
@@ -19,6 +24,10 @@ export class NavBarService {
 
 	showSignUpModal() {
 		this.showSignUp = true;
+	}
+
+	update() {
+		this.updateNavSubject.next(true);
 	}
 
 }

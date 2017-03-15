@@ -15,7 +15,11 @@ var TripDetailResolver = (function () {
         this.tripService = tripService;
     }
     TripDetailResolver.prototype.resolve = function (route) {
-        return this.tripService.getTrip(route.params['id']);
+        console.log("Getting a trip detail", route.params['id']);
+        return this.tripService.getTrip(route.params['id'])
+            .do(function (resp) {
+            console.log("The response from the server is: ", resp);
+        });
     };
     TripDetailResolver = __decorate([
         core_1.Injectable(), 

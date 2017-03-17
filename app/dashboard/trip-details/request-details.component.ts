@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { ITrip } from '../../trip/index';
 import { TripService } from '../../trip/index';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,12 +7,16 @@ import { TOASTR_TOKEN, Toastr } from '../../common/toastr.service';
 import { AuthService } from '../../user/auth.service'; 
 
 @Component ({
-	templateUrl: 'app/dashboard/trip-details/request-details.component.html'
+	templateUrl: 'app/dashboard/trip-details/request-details.component.html',
+	styleUrls: ['app/dashboard/trip-details/request-details.component.css']
 })
 
 export class RequestDetailsComponent implements OnInit {
 
 	trip: any;
+	driver: any;
+
+	@ViewChild('confirmModal') containerEl: any;
 
 	constructor (
 		private tripService: TripService,
@@ -25,11 +29,19 @@ export class RequestDetailsComponent implements OnInit {
 
 	ngOnInit() {
 		this.trip = this.route.snapshot.data['trip'];
-		this.trip = JSON.parse(this.trip._body).trip;
+		let body = JSON.parse(this.trip._body)
+		this.trip = body.trip
+		this.driver = body.driver
 		console.log("The trip details are: ", this.trip);
 	}
 
+	confirmCancel() {
+		this.$ ( this.containerEl.containerEl.nativeElement ).modal('show');
+	}
+
 	cancelRequest() {
+
+		this.$ ( this.containerEl.containerEl.nativeElement ).modal('hide');
 
 		this.tripService.cancelTripRequest(this.trip.id).subscribe(
 			(data) => {
@@ -47,11 +59,11 @@ export class RequestDetailsComponent implements OnInit {
 							}
 						}
 					}
-					this.toastr.success("Trip deleted.");
+					this.toastr.success("Trip cancelled.");
 					this.router.navigate(['/', 'dashboard']);
-				}, (err) => {
-					this.toastr.error(err);
 				}
+			}, (err) => {
+					this.toastr.error(err);
 			}
 		);
 		

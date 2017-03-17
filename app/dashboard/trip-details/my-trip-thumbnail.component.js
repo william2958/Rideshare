@@ -10,11 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
+var auth_service_1 = require('../../user/auth.service');
 var MyTripThumbnailComponent = (function () {
-    function MyTripThumbnailComponent(router) {
+    function MyTripThumbnailComponent(router, authService) {
         this.router = router;
+        this.authService = authService;
         this.cancelRequest = new core_1.EventEmitter();
     }
+    MyTripThumbnailComponent.prototype.ngOnInit = function () {
+        console.log("Trip comopnoent: ", this.trip);
+        if (this.trip.accepted_users.indexOf(this.authService.currentUser.id) > -1) {
+            this.accepted = true;
+        }
+        else {
+            this.accepted = false;
+        }
+    };
     MyTripThumbnailComponent.prototype.cancel = function () {
         this.cancelRequest.emit(this.trip);
     };
@@ -46,9 +57,9 @@ var MyTripThumbnailComponent = (function () {
         core_1.Component({
             selector: 'my-trip-thumbnail',
             templateUrl: 'app/dashboard/trip-details/my-trip-thumbnail.component.html',
-            styles: ["\n\t\th6 { border: 1px solid black; }\n\t"]
+            styleUrls: ['app/dashboard/trip-details/my-trip-thumbnail.component.css']
         }), 
-        __metadata('design:paramtypes', [router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, auth_service_1.AuthService])
     ], MyTripThumbnailComponent);
     return MyTripThumbnailComponent;
 }());

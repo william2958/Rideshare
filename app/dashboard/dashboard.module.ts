@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '@angular/material';
 
 import { dashboardRoutes } from './dashboard.routes';
 import { DashboardComponent } from './dashboard.component';
@@ -10,6 +11,7 @@ import { RequestDetailsComponent } from './trip-details/request-details.componen
 import { ListingDetailsComponent } from './trip-details/listing-details.component';
 import { TripDetailResolver } from '../trip/index';
 import { ListingDetailResolver } from './trip-details/listing-details-resolver.service';
+import { ProfileComponent } from './profile/profile.component';
 
 import { CommonRideshareModule } from '../common/common.module';
 import { JQ_TOKEN } from '../common/jQuery.service';
@@ -22,13 +24,15 @@ declare let jQuery : Object;
 		FormsModule,
 		ReactiveFormsModule,
 		CommonRideshareModule,
+		MaterialModule,
 		RouterModule.forChild(dashboardRoutes)
 	],
 	declarations: [
 		DashboardComponent,
 		MyTripThumbnailComponent,
 		RequestDetailsComponent,
-		ListingDetailsComponent
+		ListingDetailsComponent,
+		ProfileComponent
 	],
 	providers: [
 		TripDetailResolver,

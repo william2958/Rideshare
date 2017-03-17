@@ -12,14 +12,40 @@ var core_1 = require('@angular/core');
 var TripThumbnailComponent = (function () {
     function TripThumbnailComponent() {
     }
+    TripThumbnailComponent.prototype.ngOnInit = function () {
+        var dateEpoch = this.trip.date;
+        var time = new Date(dateEpoch * 1000);
+        this.hours = time.getHours();
+        this.minutes = time.getMinutes();
+        this.date = time;
+        if (this.minutes < 10) {
+            this.minutes = "0" + this.minutes;
+        }
+        // Filter the hours so it displays properly
+        if (this.hours == 0) {
+            this.hours = 12;
+        }
+        if (this.hours > 12) {
+            this.hours = this.hours - 12;
+            this.pm = "PM";
+        }
+        else {
+            this.pm = "AM";
+        }
+    };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Object)
     ], TripThumbnailComponent.prototype, "trip", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], TripThumbnailComponent.prototype, "showDate", void 0);
     TripThumbnailComponent = __decorate([
         core_1.Component({
             selector: 'trip-thumbnail',
-            templateUrl: 'app/trip/findtrip/trip-details/trip-thumbnail.component.html'
+            templateUrl: 'app/trip/findtrip/trip-details/trip-thumbnail.component.html',
+            styleUrls: ['app/trip/findtrip/trip-details/trip-thumbnail.component.css']
         }), 
         __metadata('design:paramtypes', [])
     ], TripThumbnailComponent);

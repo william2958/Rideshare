@@ -21,6 +21,7 @@ var LandingComponent = (function () {
     };
     LandingComponent.prototype.search = function (formValues) {
         var date = new Date(formValues.date);
+        console.log("Date 1 is: ", formValues.date);
         this.router.navigate(['trip', 'searchtrips', formValues.fromLocation.toLocaleLowerCase(), formValues.toLocation.toLocaleLowerCase(), date.getTime()]);
     };
     LandingComponent.prototype.cancel = function () {

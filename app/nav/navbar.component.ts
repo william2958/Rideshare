@@ -17,12 +17,27 @@ export class NavBarComponent implements OnInit{
 	// An object to store the current user
 	currentUser;
 	// This shows a message if the user tries to sign in and enters incorrect info
-	loginInvalid = false;
+	loginInvalid:boolean = false;
+	@ViewChild('signupModal') signupEl: any;
 	@ViewChild('loginModal') loginEl: any;
 	@ViewChild('loginGuardModal') loginGuardEl: any;
+	@ViewChild('forgotPasswordModal') forgotPasswordEl: any;
 
 	// Boolean to show and hide the login modal
 	showLoginModal: boolean;
+
+	// Signup Form Fields
+	signupInvalid: boolean = false;
+	passwordMatch: boolean = false;
+	forgotPasswordEmailInvalid: boolean = false;
+	// Placeholders
+	firstNamePlaceholder: string;
+	lastNamePlaceholder: string;
+	emailPlaceholder: string;
+	passwordPlaceholder: string;
+	confirmPasswordPlaceholder: string;
+	phonePlaceholder: string;
+	facebookPlaceholder: string;
 
 	constructor (
 		private auth:AuthService, 
@@ -46,21 +61,93 @@ export class NavBarComponent implements OnInit{
 			this.currentUser = this.auth.getUser();
 			console.log("Updating navbar...");
 		})
+
+		this.firstNamePlaceholder = "First Name";
+		this.lastNamePlaceholder = "Last Name";
+		this.emailPlaceholder = "Email";
+		this.passwordPlaceholder = "Password";
+		this.confirmPasswordPlaceholder = "Confirm Password";
+		this.phonePlaceholder = "Phone number";
+		this.facebookPlaceholder = "Facebook Profile Link";
+
 	}
 
 	login(formValues) {
 		this.auth.loginUser(formValues.userName, formValues.password)
-			.subscribe(resp => {
-				if(resp) {
-					this.$ ( this.loginEl.containerEl.nativeElement ).modal('hide');
-					this.$ ( this.loginGuardEl.containerEl.nativeElement ).modal('hide');
-					
-					this.showLoginModal = false;
-					this.currentUser = this.auth.getUser();
-				} else {
+			.subscribe(
+				(data) => {
+					if(data) {
+						this.$ ( this.loginEl.containerEl.nativeElement ).modal('hide');
+						this.$ ( this.loginGuardEl.containerEl.nativeElement ).modal('hide');
+						
+						this.showLoginModal = false;
+						this.currentUser = this.auth.getUser();
+					} 
+				}, (err) => {
 					this.loginInvalid = true;
 				}
-			})
+			)
+	}
+
+	signup(form) {
+
+		console.log(form);
+		console.log(form.valid)
+
+		if (!form.valid) {
+			if (!form.value.first_name) {
+				console.log("Invalid first name")
+				this.firstNamePlaceholder = "First Name - Required!";
+			}
+			if (!form.value.last_name) {
+				this.lastNamePlaceholder = "Last Name - Required!";
+			}
+			if (!form.value.email) {
+				this.emailPlaceholder = "Email - Required!";
+			}
+			if (!form.value.password) {
+				this.passwordPlaceholder = "Password - Required!";
+			}
+			if (!form.value.password_confirm) {
+				this.confirmPasswordPlaceholder = "Confirm Password - Required!";
+			}
+			if (!form.value.phone_number) {
+				this.phonePlaceholder = "Phone Number - Required!";
+			}
+			if (!form.value.facebook_link) {
+				this.facebookPlaceholder = "Facebook Link - Required!";
+			}
+			if (form.value.password != form.value.password_confirm) {
+				this.passwordPlaceholder = "Password - Passwords don't match!";
+				this.confirmPasswordPlaceholder = "Confirm - Passwords don't match!";
+			}
+		} else {
+			if (form.value.password != form.value.password_confirm) {
+				this.passwordPlaceholder = "Password - Passwords don't match!";
+				this.confirmPasswordPlaceholder = "Confirm - Passwords don't match!";
+			} 
+			// Add additional elsifs to further check the inputs
+			else {
+				let formValues = form.value;
+				this.auth.signUp(
+					formValues.email,
+					formValues.first_name,
+					formValues.last_name,
+					formValues.password,
+					formValues.phone_number,
+					formValues.facebook_link)
+					.subscribe(
+						(data) => {
+							console.log("Sign up Successful");
+							this.$ ( this.signupEl.containerEl.nativeElement ).modal('hide');
+							this.toastr.success("Sign Up Successful!", "Please check your email for the confirmation link.")
+						}, (err) => {
+							console.log("Sign up Unsuccessful");
+							this.signupInvalid = true;
+						}
+					)
+			}
+		}
 	}
 
 	logout() {
@@ -70,8 +157,34 @@ export class NavBarComponent implements OnInit{
 	}
 
 	cancel() {
+		this.$ ( this.signupEl.containerEl.nativeElement ).modal('hide');
 		this.$ ( this.loginEl.containerEl.nativeElement ).modal('hide');
 		this.$ ( this.loginGuardEl.containerEl.nativeElement ).modal('hide');
+	}
+
+	signupRedirect() {
+		this.$ ( this.loginGuardEl.containerEl.nativeElement ).modal('hide');
+		this.$ ( this.signupEl.containerEl.nativeElement ).modal('show');
+	}
+
+	forgotPasswordRedirect() {
+		this.cancel();
+		this.$ ( this.forgotPasswordEl.containerEl.nativeElement ).modal('show');
+	}
+
+	forgotPassword(form) {
+		this.auth.forgotPassword(form.email).subscribe(
+			(data) => {
+				console.log("Forgot password email sent.");
+				this.$ ( this.forgotPasswordEl.containerEl.nativeElement ).modal('hide');
+				this.toastr.success("Reset Password Email Sent!", "Please check your email for a reset link.")
+			}, (err) => {
+				console.log("Unable to send the reset email.");
+				this.forgotPasswordEmailInvalid = true;
+				this.toastr.error(err);
+			}
+		)
+		console.log("Forgot password triggered, form is: ", form);
 	}
 
 	// if (this.showLoginModal) {

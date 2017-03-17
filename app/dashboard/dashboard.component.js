@@ -8,19 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var core_1 = require('@angular/core');
 var auth_service_1 = require('../user/auth.service');
 var navbar_service_1 = require('../nav/navbar.service');
 var index_1 = require('../trip/index');
 var core_2 = require('angular2-cookie/core');
+var jQuery_service_1 = require('../common/jQuery.service');
+var toastr_service_1 = require('../common/toastr.service');
 var DashboardComponent = (function () {
-    function DashboardComponent(authService, navbarService, tripService, cookieService) {
+    function DashboardComponent(authService, navbarService, tripService, cookieService, $, toastr) {
         this.authService = authService;
         this.navbarService = navbarService;
         this.tripService = tripService;
         this.cookieService = cookieService;
+        this.$ = $;
+        this.toastr = toastr;
         // Show requests or listing boolean
         this.requests = this.tripService.dashboardShowRequests;
+        this.isSelected = true;
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -54,8 +62,13 @@ var DashboardComponent = (function () {
         console.log("Trips: ", this.trips_listed);
         this.auth_token = this.cookieService.get("auth_token");
     };
+    DashboardComponent.prototype.confirmCancelRequest = function (event) {
+        this.$(this.containerEl.containerEl.nativeElement).modal('show');
+        this.event = event;
+    };
     DashboardComponent.prototype.cancelRequest = function (event) {
         var _this = this;
+        this.$(this.containerEl.containerEl.nativeElement).modal('hide');
         // Call tripService's cancel Request here
         console.log("Outputted event is: ", event);
         this.tripService.cancelTripRequest(event.id).subscribe(function (data) {
@@ -67,17 +80,13 @@ var DashboardComponent = (function () {
                     console.log("Index of event is: ", _this.trips_requested.indexOf(event));
                     _this.trips_requested.splice(_this.trips_requested.indexOf(event), 1);
                     console.log("After removing request, trip requested array is: ", _this.trips_requested);
+                    _this.toastr.success("Successfully cancelled the request");
                 }
             }
         }, function (err) {
+            _this.toastr.error("Could not cancel this request!");
             console.log("There was an error cancelling the trip request and the error is: ", err);
         });
-    };
-    DashboardComponent.prototype.login = function () {
-        this.authService.loginUser('william2958@gmail.com', 'password').subscribe();
-    };
-    DashboardComponent.prototype.showLoginMo = function () {
-        this.navbarService.showLoginModal();
     };
     DashboardComponent.prototype.showRequests = function () {
         this.requests = true;
@@ -85,11 +94,18 @@ var DashboardComponent = (function () {
     DashboardComponent.prototype.showListings = function () {
         this.requests = false;
     };
+    __decorate([
+        core_1.ViewChild('confirmCancelModal'), 
+        __metadata('design:type', Object)
+    ], DashboardComponent.prototype, "containerEl", void 0);
     DashboardComponent = __decorate([
         core_1.Component({
-            templateUrl: 'app/dashboard/dashboard.component.html'
-        }), 
-        __metadata('design:paramtypes', [auth_service_1.AuthService, navbar_service_1.NavBarService, index_1.TripService, core_2.CookieService])
+            templateUrl: 'app/dashboard/dashboard.component.html',
+            styleUrls: ['app/dashboard/dashboard.component.css']
+        }),
+        __param(4, core_1.Inject(jQuery_service_1.JQ_TOKEN)),
+        __param(5, core_1.Inject(toastr_service_1.TOASTR_TOKEN)), 
+        __metadata('design:paramtypes', [auth_service_1.AuthService, navbar_service_1.NavBarService, index_1.TripService, core_2.CookieService, Object, Object])
     ], DashboardComponent);
     return DashboardComponent;
 }());

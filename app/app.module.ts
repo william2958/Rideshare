@@ -6,17 +6,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 
+// Routing
 import { appRoutes } from './routes';
 
+// Services
 import { AuthService } from './user/auth.service';
 import { TripService } from './trip/index';
 import { AuthGuard } from './guards/auth.guard';
 
+// Extra Components
 import { Error404Component } from './errors/404.component';
 import { RideshareAppComponent } from './rideshare.component';
 import { LandingComponent } from './landing/landing.component';
 import { NavBarComponent } from './nav/navbar.component';
 import { NavBarService } from './nav/navbar.service';
+
+// Passwords
+import { ChangePasswordComponent } from './user/password/changepassword.component';
 
 import { CommonRideshareModule } from './common/common.module';
 
@@ -41,7 +47,8 @@ declare let toastr : Toastr;
 		Error404Component,
 		RideshareAppComponent,
 		LandingComponent,
-		NavBarComponent
+		NavBarComponent,
+		ChangePasswordComponent
 	],
 	providers: [
 		CookieService,

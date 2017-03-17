@@ -1,15 +1,29 @@
-<div>
-	<div (click)="showDetails()">
-		<h5>Trip Id: {{trip.id}}</h5>
-		<h5>Trip From Location: {{trip.from_city}}</h5>
-		<h5>Trip To Location: {{trip.to_city}}</h5>
-		<h5>Trip Time: {{trip.date}}</h5>
-		<h5>Trip Price: {{trip.price}}</h5>
+<div class="row">
+	<div class="col-xs-6 left-side">
+		<div class="trip-detail">
+			Depart: <span class="detail">{{trip.date*1000 | date : 'yMdjm'}}</span>
+		</div>
+		<div class="trip-detail">
+			Destination: <span class="detail">{{trip.to_city}}</span>
+		</div>
+		<div class="trip-detail">
+			From: <span class="detail">{{trip.from_city}}</span>
+		</div>
 	</div>
-	<div *ngIf="request">
-		<button style="color: red;" (click)="cancel()">CANCEL REQUEST</button>
-	</div>
-	<div *ngIf="!request">
-		<h3>REQUEST: ({{trip.user_requests?.length}})</h3>
+	<div class="col-xs-6 right-side">
+		<div class="trip-detail">
+			Price: <span class="price detail">${{trip.price}}</span>
+		</div>
+		<div *ngIf="request && !accepted" class="trip-detail cancel" (click)="cancel()">
+			CANCEL REQUEST
+		</div>
+		<div *ngIf="!request && !accepted" class="trip-detail requests">
+			Requests: ({{trip.user_requests?.length}})
+		</div>
+		<div *ngIf="accepted" class="trip-detail requests">
+			Contact Driver
+		</div>
+		<a (click)="showDetails()" class="view-trip">View Trip</a>
 	</div>
 </div>
+<hr>

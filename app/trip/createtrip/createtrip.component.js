@@ -24,6 +24,7 @@ var CreateTripComponent = (function () {
         this.authService = authService;
         this.$ = $;
         this.toastr = toastr;
+        this.mouseoverForm = false;
         this.fromMetadata = "Western University";
         this.fromCity = "London";
         this.fromState = "Ontario";
@@ -37,6 +38,20 @@ var CreateTripComponent = (function () {
         this.price = "20";
         this.tripDetails = "Details";
     }
+    CreateTripComponent.prototype.ngOnInit = function () {
+        this.fromDetailsPlaceholder = "Details";
+        this.fromCityPlaceholder = "City";
+        this.fromStatePlaceholder = "State";
+        this.fromCountryPlaceholder = "Country";
+        this.toDetailsPlaceholder = "Details";
+        this.toCityPlaceholder = "City";
+        this.toStatePlaceholder = "State";
+        this.toCountryPlaceholder = "Country";
+        this.numPassengersPlaceholder = "Number of Passengers";
+        this.datePlaceholder = "Departure Date";
+        this.pricePlaceholder = "Price";
+        this.detailsPlaceholder = "Additional Information";
+    };
     CreateTripComponent.prototype.confirm = function (formValues) {
         formValues.date = new Date(formValues.date).getTime();
         this.$(this.containerEl.containerEl.nativeElement).modal('show');
@@ -55,6 +70,7 @@ var CreateTripComponent = (function () {
             }
         }, function (err) {
             _this.$(_this.containerEl.containerEl.nativeElement).modal('hide');
+            _this.createFormError = err;
             _this.toastr.error(err);
         });
         console.log("form Values: ", formValues);
@@ -62,13 +78,55 @@ var CreateTripComponent = (function () {
     CreateTripComponent.prototype.cancel = function () {
         this.router.navigate(['/']);
     };
+    CreateTripComponent.prototype.checkError = function (form) {
+        if (!form.valid) {
+            console.log(form.value);
+            if (!form.value.fromLocation.fromMetadata) {
+                this.fromDetailsPlaceholder = "Details - Required!";
+            }
+            if (!form.value.fromLocation.fromCity) {
+                this.fromCityPlaceholder = "City - Required!";
+            }
+            if (!form.value.fromLocation.fromState) {
+                this.fromStatePlaceholder = "State - Required!";
+            }
+            if (!form.value.fromLocation.fromCountry) {
+                this.fromCountryPlaceholder = "Country - Required!";
+            }
+            if (!form.value.toLocation.toMetadata) {
+                this.toDetailsPlaceholder = "Details - Required!";
+            }
+            if (!form.value.toLocation.toCity) {
+                this.toCityPlaceholder = "City - Required!";
+            }
+            if (!form.value.toLocation.toState) {
+                this.toStatePlaceholder = "State - Required!";
+            }
+            if (!form.value.toLocation.toCountry) {
+                this.toCountryPlaceholder = "Country - Required!";
+            }
+            if (!form.value.price) {
+                this.pricePlaceholder = "Price - Required!";
+            }
+            if (!form.value.numPassengers) {
+                this.numPassengersPlaceholder = "Number of Passengers - Required!";
+            }
+            if (!form.value.date) {
+                this.datePlaceholder = "Departure Date - Required!";
+            }
+        }
+        else {
+            this.confirm(form.value);
+        }
+    };
     __decorate([
         core_1.ViewChild('confirmModal'), 
         __metadata('design:type', Object)
     ], CreateTripComponent.prototype, "containerEl", void 0);
     CreateTripComponent = __decorate([
         core_1.Component({
-            templateUrl: 'app/trip/createtrip/createtrip.component.html'
+            templateUrl: 'app/trip/createtrip/createtrip.component.html',
+            styleUrls: ['app/trip/createtrip/createtrip.component.css']
         }),
         __param(3, core_1.Inject(jQuery_service_1.JQ_TOKEN)),
         __param(4, core_1.Inject(toastr_service_1.TOASTR_TOKEN)), 

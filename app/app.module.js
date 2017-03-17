@@ -15,15 +15,20 @@ var http_1 = require('@angular/http');
 var forms_1 = require('@angular/forms');
 var material_1 = require('@angular/material');
 var cookies_service_1 = require('angular2-cookie/services/cookies.service');
+// Routing
 var routes_1 = require('./routes');
+// Services
 var auth_service_1 = require('./user/auth.service');
 var index_1 = require('./trip/index');
 var auth_guard_1 = require('./guards/auth.guard');
+// Extra Components
 var _404_component_1 = require('./errors/404.component');
 var rideshare_component_1 = require('./rideshare.component');
 var landing_component_1 = require('./landing/landing.component');
 var navbar_component_1 = require('./nav/navbar.component');
 var navbar_service_1 = require('./nav/navbar.service');
+// Passwords
+var changepassword_component_1 = require('./user/password/changepassword.component');
 var common_module_1 = require('./common/common.module');
 var jQuery_service_1 = require('./common/jQuery.service');
 var toastr_service_1 = require('./common/toastr.service');
@@ -46,7 +51,8 @@ var AppModule = (function () {
                 _404_component_1.Error404Component,
                 rideshare_component_1.RideshareAppComponent,
                 landing_component_1.LandingComponent,
-                navbar_component_1.NavBarComponent
+                navbar_component_1.NavBarComponent,
+                changepassword_component_1.ChangePasswordComponent
             ],
             providers: [
                 cookies_service_1.CookieService,

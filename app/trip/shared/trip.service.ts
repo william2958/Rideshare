@@ -18,7 +18,12 @@ export class TripService {
 		@Inject(APP_CONFIG) private config: IAppConfig
 	) {}
 
-	searchTrips(from: string, to: string, date: Date):Observable<any[]> {
+	searchTrips(from: string, to: string, date: string):Observable<any[]> {
+
+		// Turn from and to into lowercase
+		from = from.toLocaleLowerCase();
+		to = to.toLocaleLowerCase();
+
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({headers: headers});
 		return this.http.post(`${this.config.apiEndpoint}/search_trips?from_location=${from}&to_location=${to}&date=${date}`, options)

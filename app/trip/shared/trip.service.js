@@ -25,6 +25,9 @@ var TripService = (function () {
     }
     TripService.prototype.searchTrips = function (from, to, date) {
         var _this = this;
+        // Turn from and to into lowercase
+        from = from.toLocaleLowerCase();
+        to = to.toLocaleLowerCase();
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.config.apiEndpoint + "/search_trips?from_location=" + from + "&to_location=" + to + "&date=" + date, options)

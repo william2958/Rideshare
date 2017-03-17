@@ -28,11 +28,17 @@ var RequestDetailsComponent = (function () {
     }
     RequestDetailsComponent.prototype.ngOnInit = function () {
         this.trip = this.route.snapshot.data['trip'];
-        this.trip = JSON.parse(this.trip._body).trip;
+        var body = JSON.parse(this.trip._body);
+        this.trip = body.trip;
+        this.driver = body.driver;
         console.log("The trip details are: ", this.trip);
+    };
+    RequestDetailsComponent.prototype.confirmCancel = function () {
+        this.$(this.containerEl.containerEl.nativeElement).modal('show');
     };
     RequestDetailsComponent.prototype.cancelRequest = function () {
         var _this = this;
+        this.$(this.containerEl.containerEl.nativeElement).modal('hide');
         this.tripService.cancelTripRequest(this.trip.id).subscribe(function (data) {
             if (data) {
                 var response = JSON.parse(data._body);
@@ -48,17 +54,21 @@ var RequestDetailsComponent = (function () {
                         }
                     }
                 }
-                _this.toastr.success("Trip deleted.");
+                _this.toastr.success("Trip cancelled.");
                 _this.router.navigate(['/', 'dashboard']);
             }
         }, function (err) {
             _this.toastr.error(err);
         });
     };
-    ;
+    __decorate([
+        core_1.ViewChild('confirmModal'), 
+        __metadata('design:type', Object)
+    ], RequestDetailsComponent.prototype, "containerEl", void 0);
     RequestDetailsComponent = __decorate([
         core_1.Component({
-            templateUrl: 'app/dashboard/trip-details/request-details.component.html'
+            templateUrl: 'app/dashboard/trip-details/request-details.component.html',
+            styleUrls: ['app/dashboard/trip-details/request-details.component.css']
         }),
         __param(4, core_1.Inject(jQuery_service_1.JQ_TOKEN)),
         __param(5, core_1.Inject(toastr_service_1.TOASTR_TOKEN)), 

@@ -1,114 +1,184 @@
-<h1>Create Trip View</h1>
+<div class="container">
 
-<form #createTripForm="ngForm" (ngSubmit)="confirm(createTripForm.value)" novalifromState>
-  
-  <div ngModelGroup="fromLocation" #locationGroup="ngModelGroup">
+	<h1>Create Trip</h1>
+
+	<form #createTripForm="ngForm" novalidate>
+
+		<div class="error-message" *ngIf="createFormError">
+			{{createFormError}}
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<h2>From</h2>
+				<div ngModelGroup="fromLocation" #locationGroup="ngModelGroup">
+				  <div class="form-group">
+				    <md-input-container>        
+				      <input mdInput [(ngModel)]="fromMetadata" name="fromMetadata" id="fromMetadata" type="text" placeholder="{{fromDetailsPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>        
+				      <input mdInput [(ngModel)]="fromCity" name="fromCity" id="fromCity" type="text" placeholder="{{fromCityPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="fromState" name="fromState" id="fromState" type="text" placeholder="{{fromStatePlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="fromCountry" name="fromCountry" id="fromCountry" type="text" placeholder="{{fromCountryPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+				</div>
+			</div>
+
+	  
+			<div class="col-sm-6">
+				<h2>Destination</h2>
+				<div ngModelGroup="toLocation" #locationGroup="ngModelGroup">
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="toMetadata" name="toMetadata" id="toMetadata" type="text" placeholder="{{toDetailsPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="toCity" name="toCity" id="toCity" type="text" placeholder="{{toCityPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="toState" name="toState" id="toState" type="text" placeholder="{{toStatePlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+
+				  <div class="form-group">
+				    <md-input-container>
+				      <input mdInput [(ngModel)]="toCountry" name="toCountry" id="toCountry" type="text" placeholder="{{toCountryPlaceholder}}" required/>
+				    </md-input-container>
+				  </div>
+				</div>
+			</div>
+	  </div>
+
+	  <h2>Trip Details</h2>
 	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.fromMetadata?.invalid && (createTripForm.controls.fromMetadata?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>        
-	      <input mdInput [(ngModel)]="fromMetadata" name="fromMetadata" id="fromMetadata" type="text" placeholder="Details" required/>
+	    <md-input-container class="trip_details">
+	      <input mdInput [(ngModel)]="numPassengers" name="numPassengers" id="numPassengers" type="number" placeholder="{{numPassengersPlaceholder}}" required/>
 	    </md-input-container>
 	  </div>
 
 	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.fromCity?.invalid && (createTripForm.controls.fromCity?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>        
-	      <input mdInput [(ngModel)]="fromCity" name="fromCity" id="fromCity" type="text" placeholder="City" required/>
+	    <md-input-container class="trip_details">
+	      <input mdInput [(ngModel)]="date" name="date" id="date" type="datetime-local" placeholder="{{datePlaceholder}}" required/>
 	    </md-input-container>
 	  </div>
 
 	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.fromState?.invalid && (createTripForm.controls.fromState?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="fromState" name="fromState" id="fromState" type="text" placeholder="State" required/>
+	    <md-input-container class="trip_details">
+	      <input mdInput [(ngModel)]="price" name="price" id="price" type="number" placeholder="{{pricePlaceholder}}" required/>
 	    </md-input-container>
 	  </div>
 
 	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.fromCountry?.invalid && (createTripForm.controls.fromCountry?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="fromCountry" name="fromCountry" id="fromCountry" type="text" placeholder="Country" required/>
-	    </md-input-container>
-	  </div>
-  </div>
-
-  <div ngModelGroup="toLocation" #locationGroup="ngModelGroup">
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.toMetadata?.invalid && (createTripForm.controls.toMetadata?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="toMetadata" name="toMetadata" id="toMetadata" type="text" placeholder="Details" required/>
+	    <md-input-container class="trip_details">
+	      <input mdInput [(ngModel)]="tripDetails" name="tripDetails" id="tripDetails" type="text" placeholder="{{detailsPlaceholder}}"/>
 	    </md-input-container>
 	  </div>
 
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.toCity?.invalid && (createTripForm.controls.toCity?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="toCity" name="toCity" id="toCity" type="text" placeholder="City" required/>
-	    </md-input-container>
+	  <div class="button-row">
+		  <button class="warning-brand-button" (click)="cancel()">Cancel</button>
+		  <button class="secondary-brand-button" (click)="checkError(createTripForm)" type="submit">Create</button>
 	  </div>
+	</form>
+</div>
 
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.toState?.invalid && (createTripForm.controls.toState?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="toState" name="toState" id="toState" type="text" placeholder="State" required/>
-	    </md-input-container>
-	  </div>
+<simple-modal #confirmModal closeOnBodyClick='false' elementId="confirmModal" title="Confirm this posting?" bodyHeight="medium">
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			From:
+		</div>
+		<div class="col-sm-6 right-side">
+			<div class="trip-meta">{{fromMetadata}}</div>
+			<div class="trip-details-city">{{fromCity}}, {{fromState}}</div>
+		</div>
+	</div>
 
-	  <div class="form-group">
-	    <em *ngIf="createTripForm.controls.toCountry?.invalid && (createTripForm.controls.toCountry?.touched || mouseoverForm)">Required</em>
-	    <md-input-container>
-	      <input mdInput [(ngModel)]="toCountry" name="toCountry" id="toCountry" type="text" placeholder="Country" required/>
-	    </md-input-container>
-	  </div>
-  </div>
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			To:
+		</div>
+		<div class="col-sm-6 right-side">
+			<div class="trip-meta">{{toMetadata}}</div>
+			<div class="trip-details-city">{{toCity}}, {{toState}}</div>
+		</div>
+	</div>
 
-  <div class="form-group">
-    <em *ngIf="createTripForm.controls.numPassengers?.invalid && (createTripForm.controls.numPassengers?.touched || mouseoverForm)">Required</em>
-    <md-input-container>
-      <input mdInput [(ngModel)]="numPassengers" name="numPassengers" id="numPassengers" type="text" placeholder="Number Of Passengers" required/>
-    </md-input-container>
-  </div>
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			At:
+		</div>
+		<div class="col-sm-6 right-side">
+			<!-- <div class="trip-meta">{{hours}}:{{minutes}} {{pm}}</div> -->
+			<div class="trip-details">{{date | date : 'fullDate'}}</div>
+		</div>
+	</div>
 
-  <div class="form-group">
-    <em *ngIf="createTripForm.controls.date?.invalid && (createTripForm.controls.date?.touched || mouseoverForm)">Required</em>
-    <md-input-container>
-      <input mdInput [(ngModel)]="date" name="date" id="date" type="datetime-local" placeholder="Pick-Up Location" required/>
-    </md-input-container>
-  </div>
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			Trip Details:
+		</div>
+		<div class="col-sm-6 right-side">
+			<div class="trip-details">{{tripDetails}}</div>
+		</div>
+	</div>
 
-  <div class="form-group">
-    <em *ngIf="createTripForm.controls.price?.invalid && (createTripForm.controls.price?.touched || mouseoverForm)">Required</em>
-    <md-input-container>
-      <input mdInput [(ngModel)]="price" name="price" id="price" type="text" placeholder="Price" required/>
-    </md-input-container>
-  </div>
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			Trip Price:
+		</div>
+		<div class="col-sm-6 right-side">
+			<div class="trip-details">{{price}}</div>
+		</div>
+	</div>
 
-  <div class="form-group">
-    <em *ngIf="createTripForm.controls.tripDetails?.invalid && (createTripForm.controls.tripDetails?.touched || mouseoverForm)">Required</em>
-    <md-input-container>
-      <input mdInput [(ngModel)]="tripDetails" name="tripDetails" id="tripDetails" type="text" placeholder="Trip Details"/>
-    </md-input-container>
-  </div>
+	<div class="row detail-row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-4 left-side">
+			Number of Passengers:
+		</div>
+		<div class="col-sm-6 right-side">
+			<div class="trip-details">{{numPassengers}}</div>
+		</div>
+	</div>
 
-  <span (mouseenter)="mouseoverForm=true" (mouseleave)="mouseoverForm=false">
-    <button [disabled]="createTripForm.invalid" type="submit" class="btn btn-primary">Create</button>
-  </span>
-  <button (click)="cancel()">Cancel</button>
-  
-  createTripForm valid: {{createTripForm.valid}}
-</form>
+	<div class="button-row-2">
+		<button class="secondary-brand-button" (click)="create(createTripForm.value)">Confirm Listing</button>
+	</div>
 
-<simple-modal #confirmModal closeOnBodyClick='false' elementId="confirmModal" title="Confirm this posting?">
-  <div>{{fromMetadata}}</div>
-  <div>{{fromCity}}</div>
-  <div>{{fromState}}</div>
-  <div>{{fromCountry}}</div>
-  <div>{{toMetadata}}</div>
-  <div>{{toCity}}</div>
-  <div>{{toState}}</div>
-  <div>{{toCountry}}</div>
-  <div>{{numPassengers}}</div>
-  <div>{{date}}</div>
-  <div>{{price}}</div>
-  <button (click)="create(createTripForm.value)">Confirm</button>
 </simple-modal>

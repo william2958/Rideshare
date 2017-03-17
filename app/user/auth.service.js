@@ -43,6 +43,31 @@ var AuthService = (function () {
             }
         }).catch(this.handleError);
     };
+    AuthService.prototype.signUp = function (email, first_name, last_name, password, phone_number, facebook_link) {
+        console.log("Attempting to sign up user.");
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.config.apiEndpoint + "/sign_up\n\t\t\t?email=" + email + "\n\t\t\t&first_name=" + first_name + "\n\t\t\t&last_name=" + last_name + "\n\t\t\t&password=" + password + "\n\t\t\t&phone_number=" + phone_number + "\n\t\t\t&facebook_link=" + facebook_link, options)
+            .do(function (resp) {
+            if (resp) {
+                console.log("Successfully signed up.");
+            }
+        }).catch(this.handleError);
+    };
+    AuthService.prototype.updateUser = function (id, first_name, last_name, phone_number, facebook_link) {
+        var _this = this;
+        console.log("Updating user");
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        headers.append('Authorization', this.currentUser.auth_token);
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.config.apiEndpoint + "/update_user\n\t\t\t?id=" + id + "\n\t\t\t&first_name=" + first_name + "\n\t\t\t&last_name=" + last_name + "\n\t\t\t&phone_number=" + phone_number + "\n\t\t\t&facebook_link=" + facebook_link, options, { headers: headers })
+            .do(function (resp) {
+            if (resp) {
+                console.log("Successfully updated the user", resp);
+                _this.currentUser = JSON.parse(resp._body).user;
+            }
+        }).catch(this.handleError);
+    };
     AuthService.prototype.loginWithToken = function (token) {
         var _this = this;
         var headers = new http_1.Headers();
@@ -81,17 +106,37 @@ var AuthService = (function () {
     AuthService.prototype.getUser = function () {
         return this.currentUser;
     };
+    AuthService.prototype.forgotPassword = function (email) {
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.config.apiEndpoint + "/\n\t\t\tforgot_password?email=" + email, options)
+            .do(function (resp) {
+            console.log("Reset Password email sent!");
+        }).catch(this.handleError);
+    };
+    AuthService.prototype.changePassword = function (confirm_token, password) {
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.config.apiEndpoint + "/change_password\n\t\t\t?confirm_token=" + confirm_token + "\n\t\t\t&password=" + password, options)
+            .do(function (resp) {
+            console.log("Password reset!");
+        }).catch(this.handleError);
+    };
     AuthService.prototype.handleError = function (error) {
         // In a real world app, you might use a remote logging infrastructure
+        var err = JSON.parse(error._body);
         var errMsg;
-        if (error instanceof http_1.Response) {
-            var body = error.json() || '';
-            var err = body.error || JSON.stringify(body);
-            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        console.log("error handling", err);
+        if (err.status == "error") {
+            errMsg = err.message;
         }
-        else {
-            errMsg = error.message ? error.message : error.toString();
-        }
+        // if (error instanceof Response) {
+        //   const body = error.json() || '';
+        //   const err = body.error || JSON.stringify(body);
+        //   errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        // } else {
+        //   errMsg = error.message ? error.message : error.toString();
+        // }
         console.error(errMsg);
         return Rx_1.Observable.throw(errMsg);
     };
@@ -104,459 +149,459 @@ var AuthService = (function () {
     return AuthService;
 }());
 exports.AuthService = AuthService;
-var temp_user = {
-    id: "idstring",
-    first_name: "William",
-    last_name: "Huang",
-    trips_driving: [
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        },
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        }
-    ],
-    trips_requested: [
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        },
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        }
-    ],
-    past_trips_requested: [
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        },
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        }
-    ],
-    past_trips_driven: [
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        },
-        {
-            id: "58bf35b56a48864d1494d88f",
-            driver: {
-                id: "58bf35996a48864ce84696b1",
-                first_name: "Ted",
-                last_name: "Mosby"
-            },
-            date: new Date('4/15/2017'),
-            spaces: 2,
-            price: 20,
-            user_requests: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Lily",
-                    last_name: "Scherbazky"
-                }
-            ],
-            accepted_users: [
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Robin",
-                    last_name: "Scherbazky"
-                },
-                {
-                    id: "58bf35996a48864ce84696b1",
-                    first_name: "Marshall",
-                    last_name: "Scherbazky"
-                }
-            ],
-            location: {
-                from: {
-                    from_country: "Canada",
-                    from_state: "Ontario",
-                    from_city: "London",
-                    from_metadata: "Western University",
-                    pickup_location: "Anywhere on main campus"
-                },
-                destination: {
-                    to_country: "Canada",
-                    to_state: "Ontario",
-                    to_city: "Toronto",
-                    to_metadata: "Fairview"
-                }
-            }
-        }
-    ],
-    facebook_link: "facebook.com/william.huang.7737",
-    phone_number: "416-555-7485"
-};
+// const temp_user:any = {
+// 	id: "idstring",
+// 	first_name: "William",
+// 	last_name: "Huang",
+// 	trips_driving: [
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		},
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		}
+// 	],
+// 	trips_requested: [
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		},
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		}
+// 	],
+// 	past_trips_requested: [
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		},
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		}
+// 	],
+// 	past_trips_driven: [
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		},
+// 		{
+// 			id: "58bf35b56a48864d1494d88f",
+// 			driver: {
+// 				id: "58bf35996a48864ce84696b1",
+// 				first_name: "Ted",
+// 				last_name: "Mosby"
+// 			},
+// 			date: new Date('4/15/2017'),
+// 			spaces: 2,
+// 			price: 20,
+// 			user_requests: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Lily",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			accepted_users: [
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Robin",
+// 					last_name: "Scherbazky"
+// 				},
+// 				{
+// 					id: "58bf35996a48864ce84696b1",
+// 					first_name: "Marshall",
+// 					last_name: "Scherbazky"
+// 				}
+// 			],
+// 			location: {
+// 				from: {
+// 					from_country: "Canada",
+// 					from_state: "Ontario",
+// 					from_city: "London",
+// 					from_metadata: "Western University",
+// 					pickup_location: "Anywhere on main campus"
+// 				}, 
+// 				destination: {
+// 					to_country: "Canada",
+// 					to_state: "Ontario",
+// 					to_city: "Toronto",
+// 					to_metadata: "Fairview"
+// 				}
+// 			}
+// 		}
+// 	],
+// 	facebook_link: "facebook.com/william.huang.7737",
+// 	phone_number: "416-555-7485"
+// } 
 //# sourceMappingURL=auth.service.js.map

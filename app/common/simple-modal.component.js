@@ -17,6 +17,17 @@ var SimpleModalComponent = (function () {
     function SimpleModalComponent($) {
         this.$ = $;
     }
+    SimpleModalComponent.prototype.getHeight = function () {
+        if (this.bodyHeight == 'large') {
+            return '400px';
+        }
+        else if (this.bodyHeight == 'medium') {
+            return '340px';
+        }
+        else {
+            return '280px';
+        }
+    };
     SimpleModalComponent.prototype.closeModal = function () {
         if (this.closeOnBodyClick.toLocaleLowerCase() === 'true') {
             this.$(this.containerEl.nativeElement).modal('hide');
@@ -35,14 +46,18 @@ var SimpleModalComponent = (function () {
         __metadata('design:type', String)
     ], SimpleModalComponent.prototype, "closeOnBodyClick", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], SimpleModalComponent.prototype, "bodyHeight", void 0);
+    __decorate([
         core_1.ViewChild('modalcontainer'), 
         __metadata('design:type', core_1.ElementRef)
     ], SimpleModalComponent.prototype, "containerEl", void 0);
     SimpleModalComponent = __decorate([
         core_1.Component({
             selector: 'simple-modal',
-            template: "\n\t\t<div id=\"{{elementId}}\" #modalcontainer class=\"modal fade\" tabIndex=\"-1\">\n\t\t\t<div class=\"modal-dialog\">\n\t\t\t\t<div class=\"modal-content\">\n\t\t\t\t\t<div class=\"modal-header\">\n\t\t\t\t\t\t<img class=\"logo\" src=\"images/friday-square.svg\">\n\t\t\t\t\t\t<div class=\"title\">{{title}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"modal-body\" (click)=\"closeModal()\">\n\t\t\t\t\t\t<ng-content></ng-content>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t",
-            styles: ["\n\t\t.modal-header {\n\t\t\tbackground-color: #C3DFED;\n\t\t\ttext-align: center;\n\t\t}\n\t\t.modal-body {\n\t\t\theight: 250px;\n\t\t\toverflow-y: scroll;\n\t\t}\n\t\t.modal-content {\n\t\t\tborder-radius: 0px;\n\t\t}\n\t\t.logo {\n\t\t\twidth: 50px;\n\t\t\theight: 50px;\n\t\t}\n\t\timg {\n\t\t\tvertical-align: bottom;\n\t\t}\n\t\t.title {\n\t\t\tfont-size: 32px;\n\t\t\tcolor: #005FB5;\n\t\t\tdisplay: inline;\n\t\t}\n\t"]
+            templateUrl: 'app/common/simple-modal.component.html',
+            styleUrls: ['app/common/simple-modal.component.css']
         }),
         __param(0, core_1.Inject(jQuery_service_1.JQ_TOKEN)), 
         __metadata('design:paramtypes', [Object])

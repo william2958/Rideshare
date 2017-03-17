@@ -1,5 +1,12 @@
+.loggedInOptions {
+	margin-top: 20px;
+}
+
 li > a {
 	display: inline;
+	font-weight: bold;
+	font-family: 'Open Sans';
+	color: #2E7D32;
 }
 
 .mat-input-container {
@@ -11,7 +18,7 @@ li > a {
 
 button {
 	height: 38px;
-	margin-top: 9px;
+	margin-top: 10px;
 	margin-left: 5px;
 	font-family: 'Open Sans';
 	box-shadow: 0px 1px 3px #2E7D32, 0px 1px 3px #2E7D32;
@@ -35,4 +42,40 @@ button {
 
 .navbar-brand:hover {
 	color: white;
+}
+
+.form-group {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.form-group > a {
+	float: right;
+	margin-top: -5px;
+}
+
+md-input-container {
+	margin-top: 35px;
+	font-size: 1.1em;
+}
+
+.button-row {
+	text-align: center;
+	margin-top: 30px;
+	clear: both;
+}
+
+.invalid-login {
+	color: #F44336;
+	text-align: center;
+}
+
+.signup-link {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.login-header {
+	text-align: center;
 }

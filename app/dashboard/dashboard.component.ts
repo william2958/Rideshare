@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { AuthService } from '../user/auth.service';
 import { NavBarService } from '../nav/navbar.service';
 import { TripService } from '../trip/index';
 import { CookieService } from 'angular2-cookie/core';
+import { JQ_TOKEN } from '../common/jQuery.service';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 
 @Component({
-	templateUrl: 'app/dashboard/dashboard.component.html'
+	templateUrl: 'app/dashboard/dashboard.component.html',
+	styleUrls: ['app/dashboard/dashboard.component.css']
 })
 
 export class DashboardComponent implements OnInit {
@@ -18,11 +21,19 @@ export class DashboardComponent implements OnInit {
 	trips_requested: any[];
 	trips_listed: any[];
 
+	isSelected: boolean = true;
+
+	event: any;
+
+	@ViewChild('confirmCancelModal') containerEl: any;
+
 	constructor(
 		private authService: AuthService,
 		private navbarService: NavBarService,
 		private tripService: TripService,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		@Inject(JQ_TOKEN) private $: any,
+		@Inject(TOASTR_TOKEN) private toastr: Toastr
 	) {}
 
 	ngOnInit() {
@@ -57,7 +68,13 @@ export class DashboardComponent implements OnInit {
 		this.auth_token = this.cookieService.get("auth_token");
 	}
 
+	confirmCancelRequest(event) {
+		this.$ ( this.containerEl.containerEl.nativeElement ).modal('show');
+		this.event = event;
+	}
+
 	cancelRequest(event) {
+		this.$ ( this.containerEl.containerEl.nativeElement ).modal('hide');
 		// Call tripService's cancel Request here
 		console.log("Outputted event is: ", event);
 		this.tripService.cancelTripRequest(event.id).subscribe(
@@ -70,21 +87,14 @@ export class DashboardComponent implements OnInit {
 						console.log("Index of event is: ", this.trips_requested.indexOf(event))
 						this.trips_requested.splice(this.trips_requested.indexOf(event), 1)
 						console.log("After removing request, trip requested array is: ", this.trips_requested)
-
+						this.toastr.success("Successfully cancelled the request");
 					}
 				}
 			}, (err) => {
+				this.toastr.error("Could not cancel this request!")
 				console.log("There was an error cancelling the trip request and the error is: ", err);
 			}
 		);
-	}
-
-	login() {
-		this.authService.loginUser('william2958@gmail.com', 'password').subscribe();
-	}
-
-	showLoginMo() {
-		this.navbarService.showLoginModal();
 	}
 
 	showRequests() {

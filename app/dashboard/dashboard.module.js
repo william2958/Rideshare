@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
 var forms_1 = require('@angular/forms');
+var material_1 = require('@angular/material');
 var dashboard_routes_1 = require('./dashboard.routes');
 var dashboard_component_1 = require('./dashboard.component');
 var my_trip_thumbnail_component_1 = require('./trip-details/my-trip-thumbnail.component');
@@ -19,6 +20,7 @@ var request_details_component_1 = require('./trip-details/request-details.compon
 var listing_details_component_1 = require('./trip-details/listing-details.component');
 var index_1 = require('../trip/index');
 var listing_details_resolver_service_1 = require('./trip-details/listing-details-resolver.service');
+var profile_component_1 = require('./profile/profile.component');
 var common_module_1 = require('../common/common.module');
 var jQuery_service_1 = require('../common/jQuery.service');
 var app_config_1 = require('../app.config');
@@ -32,13 +34,15 @@ var DashboardModule = (function () {
                 forms_1.FormsModule,
                 forms_1.ReactiveFormsModule,
                 common_module_1.CommonRideshareModule,
+                material_1.MaterialModule,
                 router_1.RouterModule.forChild(dashboard_routes_1.dashboardRoutes)
             ],
             declarations: [
                 dashboard_component_1.DashboardComponent,
                 my_trip_thumbnail_component_1.MyTripThumbnailComponent,
                 request_details_component_1.RequestDetailsComponent,
-                listing_details_component_1.ListingDetailsComponent
+                listing_details_component_1.ListingDetailsComponent,
+                profile_component_1.ProfileComponent
             ],
             providers: [
                 index_1.TripDetailResolver,

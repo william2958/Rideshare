@@ -4,17 +4,17 @@
 
     <form #searchForm="ngForm" novalidate>
       <div class="form-group">
-        <em [hidden]="!(searchForm.controls.fromLocation?.invalid && (searchForm.controls.fromLocation?.touched || mouseoverForm))">Required</em>
+        <em *ngIf="(searchForm.controls.fromLocation?.invalid && (searchForm.controls.fromLocation?.touched || mouseoverForm))">Required</em>
         <input (ngModel)="fromLocation" name="fromLocation" id="fromLocation" type="text" placeholder="From: (city)" required/>
       </div>
 
       <div class="form-group">
-        <em [hidden]="!(searchForm.controls.toLocation?.invalid && (searchForm.controls.toLocation?.touched || mouseoverForm))">Required</em>
+        <em *ngIf="(searchForm.controls.toLocation?.invalid && (searchForm.controls.toLocation?.touched || mouseoverForm))">Required</em>
         <input (ngModel)="toLocation" name="toLocation" id="toLocation" type="text" placeholder="To: (city)" required/>
       </div>
 
       <div class="form-group">
-        <em id="date-error" [hidden]="!(searchForm.controls.date?.invalid && (searchForm.controls.date?.touched || mouseoverForm))">Required</em>
+        <em id="date-error" *ngIf="(searchForm.controls.date?.invalid && (searchForm.controls.date?.touched || mouseoverForm))">Required</em>
         <input class="date" (ngModel)="date" name="date" id="date" type="date" placeholder="Date" required/>
       </div>
 

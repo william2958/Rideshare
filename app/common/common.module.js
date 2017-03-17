@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var simple_modal_component_1 = require('./simple-modal.component');
 var modal_trigger_directive_1 = require('./modal-trigger.directive');
+var material_1 = require('@angular/material');
 var CommonRideshareModule = (function () {
     function CommonRideshareModule() {
     }
@@ -20,7 +21,9 @@ var CommonRideshareModule = (function () {
                 simple_modal_component_1.SimpleModalComponent,
                 modal_trigger_directive_1.ModalTriggerDirective
             ],
-            imports: [],
+            imports: [
+                material_1.MaterialModule
+            ],
             exports: [
                 simple_modal_component_1.SimpleModalComponent,
                 modal_trigger_directive_1.ModalTriggerDirective
